@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ordu & Fatsa Kıyı Balıkçılığı Rehberi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a2540;
+            --primary-light: #1e3a5f;
+            --accent: #00d2ff;
+            --accent-warm: #ff7e5f;
+            --bg-dark: #071527;
+            --card-bg: #112239;
+            --card-border: #1d3557;
+            --text-main: #f0f4f8;
+            --text-muted: #94a3b8;
+            --success: #2ec4b6;
+            --warning: #ffb703;
+            --night-mode: #7209b7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding-bottom: 70px;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        header {
+            background: linear-gradient(135deg, #0a2540 0%, #004e92 100%);
+            padding: 18px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .header-title h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            padding: 12px 16px 6px;
+        }
+
+        .search-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box i {
+            color: var(--text-muted);
+        }
+
+        .filter-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 16px;
+            scrollbar-width: none;
+        }
+
+        .filter-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .view-content {
+            display: none;
+            padding: 0 16px 16px;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        .fish-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .fish-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .fish-card:active {
+            transform: scale(0.98);
+        }
+
+        .fish-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .fish-img-thumb {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--card-border);
+            background: rgba(0, 210, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .fish-details h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .fish-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .badge-time {
+            background: rgba(255, 183, 3, 0.15);
+            color: var(--warning);
+        }
+
+        .badge-spin {
+            background: rgba(0, 210, 255, 0.15);
+            color: var(--accent);
+        }
+
+        .badge-night {
+            background: rgba(114, 9, 183, 0.25);
+            color: #c77dff;
+        }
+
+        .badge-day {
+            background: rgba(255, 126, 95, 0.2);
+            color: var(--accent-warm);
+        }
+
+        .badge-lrf {
+            background: rgba(46, 196, 182, 0.2);
+            color: var(--success);
+        }
+
+        .chevron {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-body {
+            background: var(--bg-dark);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            border-top: 1px solid var(--accent);
+            animation: slideUp 0.25s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-title h2 {
+            font-size: 1.3rem;
+            color: var(--accent);
+        }
+
+        .close-btn {
+            background: var(--card-bg);
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .modal-banner-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 14px;
+            background: var(--card-bg);
+        }
+
+        .detail-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .detail-section h4 {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section p,
+        .detail-section ul {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .detail-section li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .detail-section li::before {
+            content: "•";
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .calendar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .month-name {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .month-hours {
+            font-size: 0.75rem;
+            color: var(--warning);
+            font-weight: normal;
+        }
+
+        .month-fish-list {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Spot Cards - Gelişmiş */
+        .spot-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .spot-card:active {
+            border-color: var(--accent);
+        }
+
+        .spot-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .spot-number {
+            background: var(--accent);
+            color: #000;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .spot-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .spot-target {
+            font-size: 0.82rem;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .spot-target i {
+            margin-right: 4px;
+        }
+
+        .spot-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .spot-method {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            background: rgba(0, 210, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .spot-method i {
+            color: var(--warning);
+            margin-right: 4px;
+        }
+
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
+            background: var(--primary);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-decoration: none;
+            cursor: pointer;
+            width: 25%;
+            background: transparent;
+            border: none;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tip-box {
+            background: rgba(255, 183, 3, 0.08);
+            border-left: 3px solid var(--warning);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .tip-box strong {
+            color: var(--warning);
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 30px 0;
+            font-size: 0.9rem;
+        }
+
+        .best-time-banner {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(255, 183, 3, 0.05));
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .best-time-banner i {
+            color: var(--warning);
+            margin-right: 6px;
+        }
+
+        .best-time-banner span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-title">
+            <i class="fa-solid fa-fish-fins"></i>
+            <div>
+                <h1>Ordu & Fatsa Balık Rehberi</h1>
+                <div class="header-subtitle"><i class="fa-solid fa-location-dot"></i> Karadeniz Kıyı Balıkçılığı</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- VIEW 1: BALIKLAR -->
+    <div id="view-fish" class="view-content active">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Balık adı veya yem ara..." onkeyup="filterFish()">
+            </div>
+        </div>
+
+        <div class="filter-scroll">
+            <div class="chip active" data-filter="all" onclick="setFilter('all', this)"><i class="fa-solid fa-border-all"></i> Tümü</div>
+            <div class="chip" data-filter="spin" onclick="setFilter('spin', this)"><i class="fa-solid fa-dharmachakra"></i> Spin</div>
+            <div class="chip" data-filter="lrf" onclick="setFilter('lrf', this)"><i class="fa-solid fa-rod"></i> LRF</div>
+            <div class="chip" data-filter="night" onclick="setFilter('night', this)"><i class="fa-solid fa-moon"></i> Gece</div>
+            <div class="chip" data-filter="day" onclick="setFilter('day', this)"><i class="fa-solid fa-sun"></i> Gündüz</div>
+        </div>
+
+        <div class="fish-grid" id="fishGrid"></div>
+    </div>
+
+    <!-- VIEW 2: TAKVİM -->
+    <div id="view-calendar" class="view-content" style="padding-top: 16px;">
+        <div class="best-time-banner">
+            <i class="fa-regular fa-clock"></i>
+            <span>05:00 - 08:30</span> <i class="fa-solid fa-arrow-right" style="color: var(--text-muted);"></i>
+            <span>18:30 - 21:30</span>
+            <br><small style="color: var(--text-muted);">En verimli av saatleri</small>
+        </div>
+
+        <div class="tip-box">
+            <i class="fa-solid fa-lightbulb"></i> <strong>Ordu En Verimli Dönemler:</strong><br>
+            • <strong>Mayıs:</strong> Levrek başlar, İstavrit artar.<br>
+            • <strong>Haziran-Temmuz:</strong> Levrek, Zargana, İstavrit, Eşkına.<br>
+            • <strong>Eylül-Kasım:</strong> Palamut, Lüfer, Çinekop sezonu.
+        </div>
+        <div id="calendarList"></div>
+    </div>
+
+    <!-- VIEW 3: MERALAR (FATSA) - GÜNCELLENDİ -->
+    <div id="view-spots" class="view-content" style="padding-top: 16px;">
+        <div class="best-time-banner">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Fatsa Kıyı Şeridi</span>
+            <br><small style="color: var(--text-muted);">6 farklı av noktası</small>
+        </div>
+
+        <div class="tip-box">
+            <i class="fa-solid fa-info-circle"></i> <strong>Karadeniz İpucu:</strong> En verimli zamanlar <strong>sabah gün doğumu (05:00 - 08:30)</strong> ile <strong>akşam hava kararma saatleridir (18:30 - 21:30)</strong>.
+        </div>
+
+        <!-- Spot 1 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">1</div>
+                <div class="spot-name">Fatsa Büyük Mendirek (Liman Ucu)</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Lüfer, Çinekop, Levrek, Eşkına, Mezgit</div>
+            <div class="spot-desc">Mendireğin açık denize bakan dış kayalıkları ve uç kısmı, akıntılı ve derin suya ulaştığı için Fatsa'nın en popüler noktasıdır.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Sonbaharda kaşık/metal jig ile Lüfer/Çinekop, gece mantarlı ışıklı takımlarla Eşkına ve Mezgit.</div>
+        </div>
+
+        <!-- Spot 2 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">2</div>
+                <div class="spot-name">Bolaman Kıyıları ve Burun Şeridi</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Levrek, Zargana, Palamut, Kalkan</div>
+            <div class="spot-desc">Kumluk ve kırma taşlık karmaşık bir taban yapısına sahiptir.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Sabah erken Zargana topu/ince silikonlarla Zargana, dalgalı havalarda sahte balıkla Levrek, ilkbaharda yemli dip oltasıyla Kalkan.</div>
+        </div>
+
+        <!-- Spot 3 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">3</div>
+                <div class="spot-name">Ilıca Kayalıkları</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Eşkına (Kaya Levreği), Karagöz, Levrek</div>
+            <div class="spot-desc">Derin oyuklar ve doğal kayalık dipler barındırır.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Gece canlı teke, boru kurdu veya karides kullanarak ışıklı şamandıralı takımlarla Eşkına avı için Fatsa'daki en iyi mera.</div>
+        </div>
+
+        <!-- Spot 4 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">4</div>
+                <div class="spot-name">Gaga Gölü Tatlı Su Çıkışı (Dere Ağzı)</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Levrek, Kefal</div>
+            <div class="spot-desc">Tatlı suyun denizle buluştuğu nokta, küçük yemlik balıkları çektiği için yırtıcı balıkların geçiş güzergahıdır.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Bulanık veya hafif dalgalı havalarda silikon yemler ve su üstü sahtelerle Levrek.</div>
+        </div>
+
+        <!-- Spot 5 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">5</div>
+                <div class="spot-name">Yalıköy Taşlık Burunları</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Palamut, Lüfer, Levrek</div>
+            <div class="spot-desc">Açık deniz akıntısına yakın, kayalık ve derin bir yapısı vardır.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Eylül-Kasım döneminde shore jigging (metal jig) ve ağır kaşıklarla kıyıdan Palamut ve Lüfer.</div>
+        </div>
+
+        <!-- Spot 6 -->
+        <div class="spot-card">
+            <div class="spot-header">
+                <div class="spot-number">6</div>
+                <div class="spot-name">Dolunay Mahallesi Sahili</div>
+            </div>
+            <div class="spot-target"><i class="fa-solid fa-fish"></i> Levrek, Zargana</div>
+            <div class="spot-desc">Kıyıya yakın taşlık ve köpüklü sığ alanlar sunar.</div>
+            <div class="spot-method"><i class="fa-solid fa-rod"></i> Sert rüzgarlı ve dalgalı günlerde dalga arkasına atılan sığ dalan sahte balıklar (minnow) ile Levrek.</div>
+        </div>
+    </div>
+
+    <!-- VIEW 4: EKİPMAN & İPUÇLARI -->
+    <div id="view-equip" class="view-content" style="padding-top: 16px;">
+        <div class="detail-section">
+            <h4><i class="fa-solid fa-toolbox"></i> Spin & LRF Önerilen Ekipman</h4>
+            <ul>
+                <li><strong>Spin Kamış:</strong> 2.70m - 3.00m (10-40g atarlı)</li>
+                <li><strong>LRF Kamış:</strong> 2.10m - 2.50m (2-15g atarlı)</li>
+                <li><strong>Makine:</strong> 3000 - 4000 Kafa Spin Makinesi</li>
+                <li><strong>İp Misina:</strong> 0.16mm - 0.25mm İp (PE 0.8 - 1.2)</li>
+                <li><strong>Lider:</strong> 0.30mm - 0.40mm Fluorocarbon</li>
+                <li><strong>Jig Head:</strong> 3g - 30g arası Klipsli</li>
+            </ul>
+        </div>
+
+        <div class="detail-section">
+            <h4><i class="fa-solid fa-worm"></i> Yem Kullanım Özeti</h4>
+            <ul>
+                <li><strong>Boru Kurdu:</strong> Levrek, İstavrit, Karagöz, İzmarit, Eşkına</li>
+                <li><strong>Canlı Teke / Karides:</strong> Levrek, Zargana, Eşkına, Karagöz</li>
+                <li><strong>Mamun:</strong> Karagöz, Mırmır, Mezgit</li>
+                <li><strong>Midye:</strong> Karagöz, Kefal</li>
+                <li><strong>Hamsi / Sardalya:</strong> Lüfer, Palamut, Çinekop, Mezgit, Kalkan</li>
+            </ul>
+        </div>
+
+        <div class="detail-section">
+            <h4><i class="fa-solid fa-shield-halved"></i> Başarılı Av İçin İpuçları</h4>
+            <ul>
+                <li>Hava durumunu ve rüzgar yönünü takip edin (Rüzgarlı havalarda dalga kıyıya yem taşır).</li>
+                <li>Sabah gün doğumu (05:00-08:30) ve akşam (18:30-21:30) en verimli saatlerdir.</li>
+                <li>Lider (Fluorocarbon) misina kullanmayı ihmal etmeyin.</li>
+                <li>Yasal av boylarına dikkat edin, küçük balıkları suya iade edin.</li>
+                <li>Gece avlarında mantarlı/mavi ışıklı takımlar eşkına için etkilidir.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Fish Modal Detail -->
+    <div class="modal" id="fishModal">
+        <div class="modal-body">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h2 id="modalName">Balık Adı</h2>
+                </div>
+                <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <img id="modalBannerImg" class="modal-banner-img" src="" alt="Balık Görseli" onerror="this.style.display='none'">
+
+            <div class="detail-section">
+                <h4><i class="fa-solid fa-calendar-days"></i> En Verimli Dönem & Saatler</h4>
+                <p id="modalTime">-</p>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fa-solid fa-worm"></i> Canlı Yem Önerileri</h4>
+                <p id="modalLiveBait">-</p>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fa-solid fa-feather"></i> Sahte Yem (Spin / LRF)</h4>
+                <p id="modalLure">-</p>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fa-solid fa-anchor"></i> Zoka / Jig & Gramaj</h4>
+                <p id="modalJig">-</p>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fa-solid fa-map-location-dot"></i> Nerede Tutulur?</h4>
+                <p id="modalSpot">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchView('fish', this)">
+            <i class="fa-solid fa-fish"></i>
+            <span>Balıklar</span>
+        </button>
+        <button class="nav-item" onclick="switchView('calendar', this)">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Takvim</span>
+        </button>
+        <button class="nav-item" onclick="switchView('spots', this)">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span>Meralar</span>
+        </button>
+        <button class="nav-item" onclick="switchView('equip', this)">
+            <i class="fa-solid fa-toolbox"></i>
+            <span>Ekipman</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- BALIK VERİTABANI ---
+        const fishData = [{
+            id: 1,
+            name: "Levrek",
+            img: "https://cdn.pixabay.com/photo/2019/01/02/21/10/fish-3909650_1280.jpg",
+            tags: ["spin", "lrf", "day", "night"],
+            time: "Nisan - Kasım, Sabah (05:00-08:30) ve Akşam (18:30-21:30)",
+            liveBait: "Boru kurdu, Canlı teke/karides, Hamsi",
+            lure: "Silikon yemler (Grub, Shad), 7-12 cm Rapala, Minnow",
+            jig: "Jig head 3g - 15g, Kaşık kaşık 10-30g",
+            spot: "Fatsa Büyük Mendirek, Bolaman Sahili, Ilıca Kayalıklar, Gaga Gölü Çıkışı, Dolunay Mahallesi"
+        }, {
+            id: 2,
+            name: "Lüfer",
+            img: "https://cdn.pixabay.com/photo/2013/02/28/08/54/bluefish-182602_1280.jpg",
+            tags: ["spin", "night"],
+            time: "Eylül - Kasım, Gece ve sabah erken saatler",
+            liveBait: "Hamsi, Sardalya, Canlı karides",
+            lure: "Metal kaşık, 9-14 cm Rapala, Popper",
+            jig: "Jig head 7g - 25g, Kaşık kaşık 15-35g",
+            spot: "Fatsa Büyük Mendirek, Yalıköy Taşlık Burunları"
+        }, {
+            id: 3,
+            name: "Palamut",
+            img: "https://cdn.pixabay.com/photo/2021/01/07/23/55/tuna-5897252_1280.jpg",
+            tags: ["spin", "day"],
+            time: "Eylül - Kasım, Gün boyu",
+            liveBait: "Hamsi, Sardalya",
+            lure: "Metal kaşık, 10-18 cm Rapala, Shore jig",
+            jig: "Jig head 10g - 30g, Kaşık kaşık 20-45g",
+            spot: "Yalıköy Taşlık Burunları, Bolaman Sahili"
+        }, {
+            id: 4,
+            name: "Zargana",
+            img: "https://cdn.pixabay.com/photo/2015/04/14/13/56/needlefish-723334_1280.jpg",
+            tags: ["spin", "lrf", "day"],
+            time: "Mayıs - Ağustos, Sabah (05:00-08:30) ve Akşam",
+            liveBait: "Canlı teke, küçük balık, Zargana topu",
+            lure: "İnce silikon yemler, 5-8 cm Rapala",
+            jig: "Jig head 2g - 8g",
+            spot: "Bolaman Kıyıları, Dolunay Mahallesi Sahili"
+        }, {
+            id: 5,
+            name: "Eşkına (Kaya Levreği)",
+            img: "https://cdn.pixabay.com/photo/2018/08/11/18/56/sea-bass-3599496_1280.jpg",
+            tags: ["spin", "night"],
+            time: "Nisan - Ekim, Gece ve alacakaranlık",
+            liveBait: "Boru kurdu, Canlı teke, Mamun",
+            lure: "Kırmızı/yeşil silikon yemler, 8-12 cm Rapala",
+            jig: "Jig head 5g - 20g, Işıklı mantarlı takımlar",
+            spot: "Ilıca Kayalıklar, Fatsa Büyük Mendirek"
+        }, {
+            id: 6,
+            name: "Karagöz",
+            img: "https://cdn.pixabay.com/photo/2016/04/18/11/50/fish-1336458_1280.jpg",
+            tags: ["lrf", "day", "night"],
+            time: "Yıl boyu, sabah ve akşam",
+            liveBait: "Mamun, Midye, Boru kurdu",
+            lure: "Küçük silikon yemler, 3-6 cm Rapala",
+            jig: "Jig head 2g - 8g",
+            spot: "Ilıca Kayalıklar, Fatsa Büyük Mendirek"
+        }, {
+            id: 7,
+            name: "İstavrit",
+            img: "https://cdn.pixabay.com/photo/2018/06/24/15/37/horse-mackerel-3493202_1280.jpg",
+            tags: ["spin", "lrf", "day"],
+            time: "Mayıs - Ekim, gün boyu",
+            liveBait: "Boru kurdu, Küçük karides",
+            lure: "Küçük metal kaşık, 3-5 cm Rapala",
+            jig: "Jig head 2g - 6g",
+            spot: "Fatsa Büyük Mendirek, Bolaman Sahili"
+        }, {
+            id: 8,
+            name: "Çinekop",
+            img: "https://cdn.pixabay.com/photo/2020/04/02/08/55/fish-4993270_1280.jpg",
+            tags: ["spin", "night"],
+            time: "Eylül - Ekim, gece ve sabah",
+            liveBait: "Hamsi, Sardalya",
+            lure: "7-10 cm Rapala, Metal kaşık",
+            jig: "Jig head 5g - 15g",
+            spot: "Fatsa Büyük Mendirek, Yalıköy Taşlık Burunları"
+        }, {
+            id: 9,
+            name: "Mezgit",
+            img: "https://cdn.pixabay.com/photo/2020/04/30/17/45/fish-5114730_1280.jpg",
+            tags: ["day", "night"],
+            time: "Kasım - Mart, gece ve sabah",
+            liveBait: "Mamun, Boru kurdu",
+            lure: "Küçük silikon yemler",
+            jig: "Jig head 3g - 10g, Işıklı mantarlı takımlar",
+            spot: "Fatsa Büyük Mendirek, Bolaman Sahili"
+        }, {
+            id: 10,
+            name: "Kalkan",
+            img: "https://cdn.pixabay.com/photo/2016/07/03/18/28/flounder-1495521_1280.jpg",
+            tags: ["day"],
+            time: "Nisan - Haziran, sabah saatleri",
+            liveBait: "Küçük balık, Karides",
+            lure: "Ağır kaşık, 10-20 cm Rapala",
+            jig: "Jig head 15g - 40g",
+            spot: "Bolaman Sahili (kumluk alanlar)"
+        }];
+
+        // --- TAKVİM VERİSİ ---
+        const calendarData = [
+            { month: "Nisan", fish: "Levrek, Eşkına", hours: "Sabah erken (05:00-08:30)" },
+            { month: "Mayıs", fish: "Levrek, İstavrit, Zargana", hours: "Sabah - Akşam" },
+            { month: "Haziran", fish: "Levrek, Zargana, İstavrit, Eşkına", hours: "Gün boyu" },
+            { month: "Temmuz", fish: "Levrek, Zargana, Eşkına", hours: "Sabah - Akşam" },
+            { month: "Ağustos", fish: "Levrek, İstavrit", hours: "Sabah - Akşam" },
+            { month: "Eylül", fish: "Palamut, Lüfer, Çinekop, Levrek", hours: "Gece - Sabah" },
+            { month: "Ekim", fish: "Palamut, Lüfer, Çinekop", hours: "Gece - Sabah" },
+            { month: "Kasım", fish: "Palamut, Lüfer, Mezgit", hours: "Sabah - Akşam" }
+        ];
+
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // --- RENDER FISH LIST ---
+        function renderFish() {
+            const grid = document.getElementById('fishGrid');
+            const filtered = fishData.filter(fish => {
+                const matchFilter = currentFilter === 'all' || fish.tags.includes(currentFilter);
+                const matchSearch = fish.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    fish.liveBait.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    fish.lure.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML =
+                    `<div class="empty-message"><i class="fa-solid fa-fish-slash"></i> Balık bulunamadı</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(fish => `
+                    <div class="fish-card" onclick="openModal(${fish.id})">
+                        <div class="fish-info">
+                            <img class="fish-img-thumb" src="${fish.img}" alt="${fish.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2258%22 height=%2258%22%3E%3Crect width=%2258%22 height=%2258%22 fill=%22%23112239%22/%3E%3Ctext x=%2229%22 y=%2234%22 text-anchor=%22middle%22 fill=%22%2394a3b8%22 font-size=%2220%22%3E🐟%3C/text%3E%3C/svg%3E'">
+                            <div class="fish-details">
+                                <h3>${fish.name}</h3>
+                                <div class="fish-tags">
+                                    ${fish.tags.includes('spin') ? '<span class="badge badge-spin"><i class="fa-solid fa-dharmachakra"></i> Spin</span>' : ''}
+                                    ${fish.tags.includes('lrf') ? '<span class="badge badge-lrf"><i class="fa-solid fa-rod"></i> LRF</span>' : ''}
+                                    ${fish.tags.includes('day') ? '<span class="badge badge-day"><i class="fa-solid fa-sun"></i> Gündüz</span>' : ''}
+                                    ${fish.tags.includes('night') ? '<span class="badge badge-night"><i class="fa-solid fa-moon"></i> Gece</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chevron"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `).join('');
+        }
+
+        // --- RENDER CALENDAR ---
+        function renderCalendar() {
+            const container = document.getElementById('calendarList');
+            container.innerHTML = calendarData.map(item => `
+                    <div class="calendar-card">
+                        <div class="month-name">
+                            ${item.month}
+                            <span class="month-hours"><i class="fa-regular fa-clock"></i> ${item.hours}</span>
+                        </div>
+                        <div class="month-fish-list"><i class="fa-solid fa-fish"></i> ${item.fish}</div>
+                    </div>
+                `).join('');
+        }
+
+        // --- FILTER FUNCTIONS ---
+        function setFilter(filter, el) {
+            currentFilter = filter;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderFish();
+        }
+
+        function filterFish() {
+            const input = document.getElementById('searchInput');
+            currentSearch = input.value;
+            renderFish();
+        }
+
+        // --- VIEW SWITCHER ---
+        function switchView(view, el) {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + view).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- MODAL FUNCTIONS ---
+        function openModal(id) {
+            const fish = fishData.find(f => f.id === id);
+            if (!fish) return;
+
+            document.getElementById('modalName').textContent = fish.name;
+            document.getElementById('modalBannerImg').src = fish.img;
+            document.getElementById('modalBannerImg').style.display = 'block';
+            document.getElementById('modalTime').textContent = fish.time;
+            document.getElementById('modalLiveBait').textContent = fish.liveBait;
+            document.getElementById('modalLure').textContent = fish.lure;
+            document.getElementById('modalJig').textContent = fish.jig;
+            document.getElementById('modalSpot').textContent = fish.spot;
+
+            document.getElementById('fishModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('fishModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('fishModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        window.addEventListener('popstate', function() {
+            if (document.getElementById('fishModal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // --- INIT ---
+        renderFish();
+        renderCalendar();
+    </script>
+
+</body>
+</html>
